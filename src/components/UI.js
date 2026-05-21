@@ -105,3 +105,17 @@ export function Card({ children, style }) {
 
 export const FL = { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: .8, color: COLORS.textMuted, marginBottom: 5 };
 export const DI = { fontFamily: "'DM Sans', sans-serif", fontSize: 14, padding: '9px 14px', border: `1.5px solid ${COLORS.border}`, borderRadius: 8, outline: 'none', background: '#fff', color: COLORS.text, width: '100%', boxSizing: 'border-box' };
+
+export function ConfirmDialog({ message, onConfirm, onCancel }) {
+  return (
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24 }}>
+      <div style={{ background: '#fff', borderRadius: 16, padding: 28, maxWidth: 360, width: '100%', boxShadow: '0 8px 40px rgba(0,0,0,0.18)', fontFamily: "'DM Sans', sans-serif" }}>
+        <p style={{ margin: '0 0 22px', fontSize: 15, fontWeight: 600, color: COLORS.text }}>{message}</p>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <Btn onClick={onCancel} variant="ghost">Abbrechen</Btn>
+          <Btn onClick={onConfirm} variant="danger">Ja, löschen</Btn>
+        </div>
+      </div>
+    </div>
+  );
+}

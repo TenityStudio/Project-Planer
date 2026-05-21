@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { COLORS, formatDate } from '../lib/utils';
-import { Btn, Inp, StatusBadge } from './UI';
+import { Btn, Inp, StatusBadge, ConfirmDialog } from './UI';
 
 export function ArchiveView({ projects, onRestore, onDelete, onBack }) {
   const [search, setSearch] = useState('');
+  const [confirmId, setConfirmId] = useState(null);
   const archived = projects.filter(p => p.archived);
   const filtered = search ? archived.filter(p => p.name.toLowerCase().includes(search.toLowerCase())) : archived;
 
   return (
     <div>
+      {confirmId && <ConfirmDialog message="Projekt endgültig löschen? Dies kann nicht rückgängig gemacht werden." onConfirm={() => { onDelete(confirmId); setConfirmId(null); }} onCancel={() => setConfirmId(null)} />}
       <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: COLORS.textMuted, fontFamily: "'DM Sans',sans-serif", fontSize: 14, padding: '4px 0', marginBottom: 20 }}>
         ← Zurück
       </button>
@@ -46,7 +48,7 @@ export function ArchiveView({ projects, onRestore, onDelete, onBack }) {
             </div>
             <div style={{ display: 'flex', gap: 6, flexShrink: 0 }}>
               <Btn onClick={() => onRestore(p.id)} variant="secondary" size="sm">↩ Wiederherstellen</Btn>
-              <Btn onClick={() => onDelete(p.id)} variant="danger" size="sm">🗑</Btn>
+              <Btn onClick={() => setConfirmId(p.id)} variant="danger" size="sm">🗑</Btn>
             </div>
           </div>
         ))}

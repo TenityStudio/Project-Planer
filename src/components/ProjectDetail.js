@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { COLORS, UNITS, STATUSES, STATUS_COLORS, calcCost, fmtEur, applyBuffer } from '../lib/utils';
-import { Btn, Inp, Sel, Card, FL, DI } from './UI';
+import { Btn, Inp, Sel, Card, FL, DI, ConfirmDialog } from './UI';
 
 function MatAutoComplete({ value, onChange, catalog, onSelect }) {
   const [open, setOpen] = useState(false);
@@ -44,9 +44,11 @@ function MatAutoComplete({ value, onChange, catalog, onSelect }) {
 }
 
 function MatRow({ mat, onUpdate, onDelete, catalog, buffer }) {
+  const [confirm, setConfirm] = useState(false);
   const lineTotal = calcCost(mat, buffer);
   return (
     <div style={{ padding: '10px 0', borderBottom: `1px solid ${COLORS.border}18` }}>
+      {confirm && <ConfirmDialog message="Material wirklich löschen?" onConfirm={onDelete} onCancel={() => setConfirm(false)} />}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 74px 90px 74px 36px', gap: 6, alignItems: 'center' }}>
         <MatAutoComplete value={mat.name} catalog={catalog}
           onChange={v => onUpdate({ ...mat, name: v })}
@@ -54,7 +56,7 @@ function MatRow({ mat, onUpdate, onDelete, catalog, buffer }) {
         <Inp value={mat.amount} onChange={v => onUpdate({ ...mat, amount: v })} placeholder="Menge" type="number" min="0" />
         <Sel value={mat.unit} onChange={v => onUpdate({ ...mat, unit: v })} options={UNITS} />
         <Inp value={mat.pricePerUnit || ''} onChange={v => onUpdate({ ...mat, pricePerUnit: v })} placeholder="€/Einh." type="number" min="0" />
-        <button onClick={onDelete}
+        <button onClick={() => setConfirm(true)}
           style={{ border: 'none', background: 'none', cursor: 'pointer', color: COLORS.textMuted, padding: 4, borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           onMouseEnter={e => e.currentTarget.style.color = COLORS.danger}
           onMouseLeave={e => e.currentTarget.style.color = COLORS.textMuted}>🗑</button>
@@ -75,6 +77,7 @@ function MatRow({ mat, onUpdate, onDelete, catalog, buffer }) {
 
 export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
   const [local, setLocal] = useState(project);
+  const [confirmProject, setConfirmProject] = useState(false);
   const saveTimer = useRef(null);
 
   // Sync when project changes from outside (realtime)
@@ -104,6 +107,7 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
 
   return (
     <div>
+      {confirmProject && <ConfirmDialog message="Projekt wirklich löschen? Alle Materialien werden ebenfalls gelöscht." onConfirm={onDelete} onCancel={() => setConfirmProject(false)} />}
       <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: COLORS.textMuted, fontFamily: "'DM Sans',sans-serif", fontSize: 14, padding: '4px 0', marginBottom: 20 }}>
         ← Zurück
       </button>
@@ -200,7 +204,7 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
       </Card>
 
       <div style={{ marginTop: 18, display: 'flex', justifyContent: 'flex-end' }}>
-        <Btn onClick={onDelete} variant="danger" size="sm">🗑 Projekt löschen</Btn>
+        <Btn onClick={() => setConfirmProject(true)} variant="danger" size="sm">🗑 Projekt löschen</Btn>
       </div>
     </div>
   );

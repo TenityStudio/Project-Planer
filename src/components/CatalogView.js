@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { COLORS, UNITS } from '../lib/utils';
-import { Btn, Inp, Sel } from './UI';
+import { Btn, Inp, Sel, ConfirmDialog } from './UI';
 
 export function CatalogView({ catalog, onAdd, onSave, onDelete, onBack }) {
   const [search, setSearch] = useState('');
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState({ name: '', unit: 'Stück', link: '', price: '', supplier: '' });
+  const [confirmId, setConfirmId] = useState(null);
 
   const filtered = search
     ? catalog.filter(c => c.name.toLowerCase().includes(search.toLowerCase()) || c.supplier?.toLowerCase().includes(search.toLowerCase()))
@@ -23,6 +24,7 @@ export function CatalogView({ catalog, onAdd, onSave, onDelete, onBack }) {
 
   return (
     <div>
+      {confirmId && <ConfirmDialog message="Eintrag wirklich löschen?" onConfirm={() => { onDelete(confirmId); setConfirmId(null); }} onCancel={() => setConfirmId(null)} />}
       <button onClick={onBack} style={{ border: 'none', background: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, color: COLORS.textMuted, fontFamily: "'DM Sans',sans-serif", fontSize: 14, padding: '4px 0', marginBottom: 20 }}>
         ← Zurück
       </button>
@@ -76,7 +78,7 @@ export function CatalogView({ catalog, onAdd, onSave, onDelete, onBack }) {
                 <button onClick={() => startEdit(c)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: COLORS.textMuted, padding: 6, fontSize: 14 }}
                   onMouseEnter={e => e.currentTarget.style.color = COLORS.accent}
                   onMouseLeave={e => e.currentTarget.style.color = COLORS.textMuted}>✏️</button>
-                <button onClick={() => onDelete(c.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: COLORS.textMuted, padding: 6, fontSize: 14 }}
+                <button onClick={() => setConfirmId(c.id)} style={{ border: 'none', background: 'none', cursor: 'pointer', color: COLORS.textMuted, padding: 6, fontSize: 14 }}
                   onMouseEnter={e => e.currentTarget.style.color = COLORS.danger}
                   onMouseLeave={e => e.currentTarget.style.color = COLORS.textMuted}>🗑</button>
               </div>
