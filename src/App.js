@@ -8,49 +8,7 @@ import { CatalogView } from './components/CatalogView';
 import { ShoppingList } from './components/ShoppingList';
 import { ArchiveView } from './components/ArchiveView';
 
-const STORAGE_KEY = 'pp_auth';
-const CORRECT_PW = process.env.REACT_APP_PASSWORD;
-
-function PasswordGate({ onUnlock }) {
-  const [pw, setPw] = useState('');
-  const [error, setError] = useState(false);
-
-  const handleSubmit = () => {
-    if (pw === CORRECT_PW) {
-      localStorage.setItem(STORAGE_KEY, CORRECT_PW);
-      onUnlock();
-    } else {
-      setError(true);
-      setPw('');
-    }
-  };
-
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: "'DM Sans', sans-serif", background: COLORS.bg, padding: 24 }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
-      <div style={{ maxWidth: 360, width: '100%', background: COLORS.card, borderRadius: 20, padding: 36, boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
-        <h1 style={{ margin: '0 0 4px', fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, color: COLORS.accent }}>Projekt Planer</h1>
-        <p style={{ margin: '0 0 28px', fontSize: 13, color: COLORS.textMuted }}>Bitte Passwort eingeben</p>
-        <Inp
-          value={pw}
-          onChange={v => { setPw(v); setError(false); }}
-          placeholder="Passwort…"
-          type="password"
-          style={{ width: '100%', marginBottom: 10 }}
-          onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
-        />
-        {error && <p style={{ fontSize: 12, color: COLORS.danger, margin: '0 0 10px' }}>Falsches Passwort</p>}
-        <Btn onClick={handleSubmit} style={{ width: '100%' }}>Einloggen</Btn>
-      </div>
-    </div>
-  );
-}
-
 export default function App() {
-  const [authed, setAuthed] = useState(() => localStorage.getItem(STORAGE_KEY) === CORRECT_PW);
-
-  if (!authed) return <PasswordGate onUnlock={() => setAuthed(true)} />;
-
   const {
     projects, catalog, loading, error,
     addProject, saveProject, removeProject, archive, restore, duplicate,
