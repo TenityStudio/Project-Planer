@@ -106,7 +106,7 @@ function BildUpload({ bildUrl, projectId, onUpdate }) {
     return (
       <div style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: `1.5px solid ${COLORS.border}` }}>
         <img src={bildUrl} alt="Projektbild"
-          style={{ width: '100%', maxHeight: 220, objectFit: 'cover', display: 'block' }} />
+          style={{ width: '100%', display: 'block' }} />
         <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 6 }}>
           <label title="Bild ersetzen"
             style={{ background: 'rgba(0,0,0,.5)', color: '#fff', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", fontWeight: 600 }}>

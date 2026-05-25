@@ -19,11 +19,6 @@ export function ProjectCard({ project, onOpen, onDuplicate, onArchive }) {
       onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(45,90,61,.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}>
 
-      {project.bildUrl && (
-        <img src={project.bildUrl} alt="Projektbild"
-          style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
-      )}
-
       <div style={{ padding: 20 }}>
 
       {/* Header */}

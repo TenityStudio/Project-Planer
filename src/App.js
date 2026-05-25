@@ -19,7 +19,7 @@ export default function App() {
 
   const [topNav, setTopNav] = useState('projekte');
   const [view, setView] = useState('list');
-  const [listView, setListView] = useState('list');
+  const [listView, setListView] = useState('kanban');
   const [activeId, setActiveId] = useState(null);
   const [freshProject, setFreshProject] = useState(false);
 
