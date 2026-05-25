@@ -79,16 +79,19 @@ function MatRow({ mat, onUpdate, onDelete, catalog, buffer }) {
 function BildUpload({ bildUrl, projectId, onUpdate }) {
   const [uploading, setUploading] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [fehler, setFehler] = useState('');
   const inputRef = useRef(null);
 
   const handleFile = async (file) => {
     if (!file || !file.type.startsWith('image/')) return;
     setUploading(true);
+    setFehler('');
     try {
       const url = await uploadBild(projectId, file);
       onUpdate(url);
     } catch (e) {
       console.error('Upload fehlgeschlagen:', e);
+      setFehler(e.message || 'Upload fehlgeschlagen');
     } finally {
       setUploading(false);
     }
@@ -143,6 +146,7 @@ function BildUpload({ bildUrl, projectId, onUpdate }) {
         {uploading ? 'Wird hochgeladen…' : 'Bild hier ablegen oder klicken'}
       </span>
       <span style={{ fontSize: 11, color: COLORS.textMuted, opacity: .7 }}>JPG, PNG, WEBP</span>
+      {fehler && <span style={{ fontSize: 11, color: COLORS.danger, fontWeight: 600 }}>⚠ {fehler}</span>}
       <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }}
         onChange={e => handleFile(e.target.files[0])} />
     </label>

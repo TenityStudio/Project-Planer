@@ -82,3 +82,9 @@ alter table projects add column if not exists bild_url text default '';
 insert into storage.buckets (id, name, public)
 values ('projekt-bilder', 'projekt-bilder', true)
 on conflict (id) do nothing;
+
+-- Storage-Policies (offener Zugriff, da keine Auth)
+create policy "Public read projekt-bilder"   on storage.objects for select using (bucket_id = 'projekt-bilder');
+create policy "Public insert projekt-bilder" on storage.objects for insert with check (bucket_id = 'projekt-bilder');
+create policy "Public update projekt-bilder" on storage.objects for update using (bucket_id = 'projekt-bilder');
+create policy "Public delete projekt-bilder" on storage.objects for delete using (bucket_id = 'projekt-bilder');
