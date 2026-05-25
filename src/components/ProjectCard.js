@@ -40,6 +40,13 @@ export function ProjectCard({ project, onOpen, onDuplicate, onArchive }) {
         </div>
       </div>
 
+      {/* Kunde */}
+      {project.kunde && (
+        <p style={{ margin: '0 0 4px', fontSize: 12, color: COLORS.textMuted, fontWeight: 600, display: 'flex', alignItems: 'center', gap: 4 }}>
+          <span>👤</span>{project.kunde}
+        </p>
+      )}
+
       {/* Notes */}
       {project.notes && (
         <p style={{ margin: '0 0 8px', fontSize: 12, color: COLORS.textMuted, fontStyle: 'italic', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

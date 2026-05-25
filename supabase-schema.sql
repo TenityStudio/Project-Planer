@@ -71,3 +71,6 @@ create trigger catalog_updated_at
 alter table projects disable row level security;
 alter table materials disable row level security;
 alter table catalog disable row level security;
+
+-- Kundenname (Migration für bestehende Datenbanken)
+alter table projects add column if not exists kunde text default '';

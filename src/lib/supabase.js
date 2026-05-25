@@ -151,6 +151,7 @@ function normalizeProject(p) {
     archived: p.archived || false,
     archivedAt: p.archived_at || null,
     createdAt: p.created_at,
+    kunde: p.kunde || '',
     materials: (p.materials || [])
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(normalizeMaterial),
@@ -192,6 +193,7 @@ function toDbProject(p) {
     buffer: parseFloat(p.buffer) || 0,
     archived: p.archived || false,
     archived_at: p.archivedAt || null,
+    kunde: p.kunde || '',
   };
 }
 

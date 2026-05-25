@@ -134,6 +134,10 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
 
       {/* Meta card */}
       <Card style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 14 }}>
+          <div style={FL}>Kundenname</div>
+          <Inp value={local.kunde || ''} onChange={v => update({ kunde: v })} placeholder="z.B. Müller GmbH" />
+        </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginBottom: 14 }}>
           <div>
             <div style={FL}>Startdatum</div>
