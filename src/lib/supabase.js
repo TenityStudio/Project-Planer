@@ -152,6 +152,7 @@ function normalizeProject(p) {
     archivedAt: p.archived_at || null,
     createdAt: p.created_at,
     kunde: p.kunde || '',
+    bildUrl: p.bild_url || '',
     materials: (p.materials || [])
       .sort((a, b) => a.sort_order - b.sort_order)
       .map(normalizeMaterial),
@@ -194,7 +195,23 @@ function toDbProject(p) {
     archived: p.archived || false,
     archived_at: p.archivedAt || null,
     kunde: p.kunde || '',
+    bild_url: p.bildUrl || '',
   };
+}
+
+// ─── Storage ────────────────────────────────────────────────
+
+export async function uploadBild(projectId, file) {
+  const { error } = await supabase.storage
+    .from('projekt-bilder')
+    .upload(`${projectId}`, file, { upsert: true, contentType: file.type });
+  if (error) throw error;
+  const { data } = supabase.storage.from('projekt-bilder').getPublicUrl(`${projectId}`);
+  return data.publicUrl + `?t=${Date.now()}`;
+}
+
+export async function deleteBild(projectId) {
+  await supabase.storage.from('projekt-bilder').remove([`${projectId}`]);
 }
 
 function toDbMaterial(m) {

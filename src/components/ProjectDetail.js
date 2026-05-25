@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { COLORS, UNITS, STATUSES, STATUS_COLORS, calcCost, fmtEur, applyBuffer } from '../lib/utils';
 import { Btn, Inp, Sel, Card, FL, DI, ConfirmDialog } from './UI';
+import { uploadBild, deleteBild } from '../lib/supabase';
 
 function MatAutoComplete({ value, onChange, catalog, onSelect }) {
   const [open, setOpen] = useState(false);
@@ -75,7 +76,80 @@ function MatRow({ mat, onUpdate, onDelete, catalog, buffer }) {
   );
 }
 
-export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
+function BildUpload({ bildUrl, projectId, onUpdate }) {
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const inputRef = useRef(null);
+
+  const handleFile = async (file) => {
+    if (!file || !file.type.startsWith('image/')) return;
+    setUploading(true);
+    try {
+      const url = await uploadBild(projectId, file);
+      onUpdate(url);
+    } catch (e) {
+      console.error('Upload fehlgeschlagen:', e);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleRemove = async () => {
+    await deleteBild(projectId);
+    onUpdate('');
+  };
+
+  if (bildUrl) {
+    return (
+      <div style={{ position: 'relative', borderRadius: 10, overflow: 'hidden', border: `1.5px solid ${COLORS.border}` }}>
+        <img src={bildUrl} alt="Projektbild"
+          style={{ width: '100%', maxHeight: 220, objectFit: 'cover', display: 'block' }} />
+        <div style={{ position: 'absolute', top: 8, right: 8, display: 'flex', gap: 6 }}>
+          <label title="Bild ersetzen"
+            style={{ background: 'rgba(0,0,0,.5)', color: '#fff', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", fontWeight: 600 }}>
+            ✏️ Ersetzen
+            <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }}
+              onChange={e => handleFile(e.target.files[0])} />
+          </label>
+          <button onClick={handleRemove} title="Bild entfernen"
+            style={{ background: 'rgba(180,0,0,.65)', color: '#fff', border: 'none', borderRadius: 6, padding: '4px 10px', fontSize: 12, cursor: 'pointer', fontFamily: "'DM Sans',sans-serif", fontWeight: 600 }}>
+            ✕
+          </button>
+        </div>
+        {uploading && (
+          <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 13, fontWeight: 600, color: COLORS.textMuted }}>
+            Wird hochgeladen…
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <label
+      onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={e => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files[0]); }}
+      style={{
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        gap: 8, padding: '28px 16px', cursor: 'pointer',
+        border: `2px dashed ${dragOver ? COLORS.accent : COLORS.border}`,
+        borderRadius: 10,
+        background: dragOver ? COLORS.accentPale : 'transparent',
+        transition: 'all .15s',
+      }}>
+      <span style={{ fontSize: 28, opacity: .4 }}>🖼</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: COLORS.textMuted }}>
+        {uploading ? 'Wird hochgeladen…' : 'Bild hier ablegen oder klicken'}
+      </span>
+      <span style={{ fontSize: 11, color: COLORS.textMuted, opacity: .7 }}>JPG, PNG, WEBP</span>
+      <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }}
+        onChange={e => handleFile(e.target.files[0])} />
+    </label>
+  );
+}
+
+export function ProjectDetail({ project, onSave, onDelete, onBack, catalog, autoEditName, onNameEdited }) {
   const [local, setLocal] = useState(project);
   const [confirmProject, setConfirmProject] = useState(false);
   const saveTimer = useRef(null);
@@ -90,8 +164,8 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
     saveTimer.current = setTimeout(() => onSave(updated), 500);
   }, [local, onSave]);
 
-  const [editName, setEditName] = useState(false);
-  const [nameVal, setNameVal] = useState(local.name);
+  const [editName, setEditName] = useState(!!autoEditName);
+  const [nameVal, setNameVal] = useState(autoEditName ? '' : local.name);
 
   const addMat = () => {
     const mats = [...local.materials, { id: crypto.randomUUID(), name: '', amount: '', unit: 'Stück', pricePerUnit: '', link: '' }];
@@ -121,8 +195,10 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
         </button>
         {editName
           ? <div style={{ display: 'flex', gap: 8, alignItems: 'center', flex: 1 }}>
-              <Inp value={nameVal} onChange={setNameVal} style={{ fontSize: 20, fontWeight: 700 }} />
-              <Btn onClick={() => { setEditName(false); update({ name: nameVal }); }} size="sm">✓</Btn>
+              <Inp value={nameVal} onChange={setNameVal} style={{ fontSize: 20, fontWeight: 700 }}
+                placeholder="Projektname…"
+                onKeyDown={e => { if (e.key === 'Enter') { setEditName(false); update({ name: nameVal || 'Neues Projekt' }); onNameEdited?.(); } }} />
+              <Btn onClick={() => { setEditName(false); update({ name: nameVal || 'Neues Projekt' }); onNameEdited?.(); }} size="sm">✓</Btn>
             </div>
           : <>
               <h2 style={{ margin: 0, fontSize: 22, fontWeight: 700, color: COLORS.text, flex: 1 }}>{local.name}</h2>
@@ -134,6 +210,10 @@ export function ProjectDetail({ project, onSave, onDelete, onBack, catalog }) {
 
       {/* Meta card */}
       <Card style={{ marginBottom: 14 }}>
+        <div style={{ marginBottom: 14 }}>
+          <div style={FL}>Projektbild</div>
+          <BildUpload bildUrl={local.bildUrl || ''} projectId={local.id} onUpdate={url => update({ bildUrl: url })} />
+        </div>
         <div style={{ marginBottom: 14 }}>
           <div style={FL}>Kundenname</div>
           <Inp value={local.kunde || ''} onChange={v => update({ kunde: v })} placeholder="z.B. Müller GmbH" />

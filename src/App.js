@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useData } from './hooks/useData';
 import { COLORS } from './lib/utils';
-import { Btn, Inp } from './components/UI';
+import { Btn } from './components/UI';
 import { ProjectCard } from './components/ProjectCard';
 import { ProjectDetail } from './components/ProjectDetail';
 import { CatalogView } from './components/CatalogView';
@@ -21,8 +21,7 @@ export default function App() {
   const [view, setView] = useState('list');
   const [listView, setListView] = useState('list');
   const [activeId, setActiveId] = useState(null);
-  const [newName, setNewName] = useState('');
-  const [showAdd, setShowAdd] = useState(false);
+  const [freshProject, setFreshProject] = useState(false);
 
   if (error) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', fontFamily: "'DM Sans', sans-serif", padding: 24 }}>
@@ -45,10 +44,10 @@ export default function App() {
   );
 
   const handleAddProject = async () => {
-    if (!newName.trim()) return;
-    const p = await addProject(newName.trim());
-    setNewName(''); setShowAdd(false);
-    setActiveId(p.id); setView('detail');
+    const p = await addProject('Neues Projekt');
+    setActiveId(p.id);
+    setFreshProject(true);
+    setView('detail');
   };
 
   const handleDeleteProject = async (id) => {
@@ -163,18 +162,9 @@ export default function App() {
                     <Btn onClick={() => setView('archive')} variant="ghost" size="sm">📦 Archiv {archiveCount > 0 && `(${archiveCount})`}</Btn>
                     <Btn onClick={() => setView('catalog')} variant="ghost" size="sm">🗄 Datenbank</Btn>
                     {active.length > 0 && <Btn onClick={() => setView('shopping')} variant="secondary" size="sm">🛒 Bestellliste</Btn>}
-                    <Btn onClick={() => setShowAdd(true)} size="sm">+ Neues Projekt</Btn>
+                    <Btn onClick={handleAddProject} size="sm">+ Neues Projekt</Btn>
                   </div>
                 </div>
-
-                {showAdd && (
-                  <div style={{ background: COLORS.highlight, border: `1.5px solid ${COLORS.highlightBorder}`, borderRadius: 14, padding: 18, marginBottom: 14, display: 'flex', gap: 8, alignItems: 'center' }}>
-                    <Inp value={newName} onChange={setNewName} placeholder="Projektname…" style={{ flex: 1 }}
-                      onKeyDown={e => { if (e.key === 'Enter') handleAddProject(); }} />
-                    <Btn onClick={handleAddProject} size="sm">✓</Btn>
-                    <Btn onClick={() => { setShowAdd(false); setNewName(''); }} variant="ghost" size="sm">✕</Btn>
-                  </div>
-                )}
 
                 {/* Kanban */}
                 {listView === 'kanban' && (
@@ -218,7 +208,9 @@ export default function App() {
                 catalog={catalog}
                 onSave={saveProject}
                 onDelete={() => handleDeleteProject(current.id)}
-                onBack={() => setView('list')} />
+                onBack={() => setView('list')}
+                autoEditName={freshProject}
+                onNameEdited={() => setFreshProject(false)} />
             )}
 
             {/* SHOPPING */}

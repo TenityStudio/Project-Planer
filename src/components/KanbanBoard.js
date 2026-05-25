@@ -18,7 +18,7 @@ function KanbanCard({ project, onOpen, onArchive, onDuplicate }) {
       style={{
         background: COLORS.card,
         borderRadius: 10,
-        padding: '10px 12px',
+        overflow: 'hidden',
         marginBottom: 8,
         cursor: dragging ? 'grabbing' : 'grab',
         border: `1.5px solid ${project.priority ? COLORS.prio + '55' : COLORS.border}`,
@@ -30,6 +30,11 @@ function KanbanCard({ project, onOpen, onArchive, onDuplicate }) {
       onMouseEnter={e => { if (!dragging) e.currentTarget.style.boxShadow = '0 4px 12px rgba(45,90,61,.1)'; }}
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; }}
     >
+      {project.bildUrl && (
+        <img src={project.bildUrl} alt="Projektbild"
+          style={{ width: '100%', height: 80, objectFit: 'cover', display: 'block' }} />
+      )}
+      <div style={{ padding: '10px 12px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 4 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5, minWidth: 0, flex: 1 }}>
           {project.priority && <span style={{ fontSize: 12, flexShrink: 0 }}>🚩</span>}
@@ -67,6 +72,7 @@ function KanbanCard({ project, onOpen, onArchive, onDuplicate }) {
         {totalCost > 0 && (
           <span style={{ fontSize: 11, fontWeight: 700, color: COLORS.accent }}>{fmtEur(totalCost)}</span>
         )}
+      </div>
       </div>
     </div>
   );

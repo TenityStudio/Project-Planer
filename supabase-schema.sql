@@ -74,3 +74,11 @@ alter table catalog disable row level security;
 
 -- Kundenname (Migration für bestehende Datenbanken)
 alter table projects add column if not exists kunde text default '';
+
+-- Projektbild-URL (Migration für bestehende Datenbanken)
+alter table projects add column if not exists bild_url text default '';
+
+-- Storage-Bucket für Projektbilder (einmalig ausführen)
+insert into storage.buckets (id, name, public)
+values ('projekt-bilder', 'projekt-bilder', true)
+on conflict (id) do nothing;

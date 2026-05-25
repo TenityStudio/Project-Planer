@@ -11,13 +11,20 @@ export function ProjectCard({ project, onOpen, onDuplicate, onArchive }) {
     <div
       onClick={onOpen}
       style={{
-        background: COLORS.card, borderRadius: 14, padding: 20, cursor: 'pointer',
+        background: COLORS.card, borderRadius: 14, overflow: 'hidden', cursor: 'pointer',
         border: `1.5px solid ${prio ? COLORS.prio + '55' : COLORS.border}`,
         borderLeft: prio ? `4px solid ${COLORS.prio}` : undefined,
         transition: 'all .2s',
       }}
       onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 6px 20px rgba(45,90,61,.1)'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
       onMouseLeave={e => { e.currentTarget.style.boxShadow = 'none'; e.currentTarget.style.transform = 'none'; }}>
+
+      {project.bildUrl && (
+        <img src={project.bildUrl} alt="Projektbild"
+          style={{ width: '100%', height: 120, objectFit: 'cover', display: 'block' }} />
+      )}
+
+      <div style={{ padding: 20 }}>
 
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: 8 }}>
@@ -70,6 +77,7 @@ export function ProjectCard({ project, onOpen, onDuplicate, onArchive }) {
         {project.buffer > 0 && <Tag color={COLORS.prio}>+{project.buffer}% Puffer</Tag>}
         {project.materials.slice(0, 2).map((m, i) => m.name && <Tag key={i} color={COLORS.textMuted}>{m.name}</Tag>)}
         {count > 2 && <Tag color={COLORS.textMuted}>+{count - 2}</Tag>}
+      </div>
       </div>
     </div>
   );
