@@ -80,7 +80,7 @@ export default function App() {
     return a.name.localeCompare(b.name, 'de');
   });
 
-  const isKanban = topNav === 'projekte' && view === 'list' && listView === 'kanban';
+  const isKanban  = topNav === 'projekte' && view === 'list' && listView === 'kanban';
   const isRechner = topNav === 'rechner';
 
   return (
@@ -101,8 +101,7 @@ export default function App() {
         <div style={{ display: 'flex', gap: 2 }}>
           {[
             { key: 'projekte', label: '📋 Projekte' },
-            { key: 'kunden',   label: '👤 Kunden'   },
-            { key: 'rechner',  label: '⚡ Rechner'   },
+            { key: 'rechner',  label: '⚡ Rechner'  },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -126,32 +125,29 @@ export default function App() {
 
       <div style={{ maxWidth: (isKanban || isRechner) ? 1100 : 680, margin: '0 auto', padding: '22px 18px' }}>
 
-        {/* KUNDEN */}
-        {topNav === 'kunden' && (
-          <KundenView projects={projects} onOpenProject={handleOpenProject} />
-        )}
-
         {/* RECHNER */}
         {topNav === 'rechner' && <NeonRechner />}
 
         {/* PROJEKTE */}
         {topNav === 'projekte' && (
           <>
-            {/* LIST / KANBAN */}
+            {/* LIST / KANBAN / KUNDEN */}
             {view === 'list' && (
               <>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 8 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                     <span style={{ fontSize: 13, color: COLORS.textMuted, fontWeight: 600 }}>
-                      {active.length} Projekt{active.length !== 1 ? 'e' : ''}
+                      {listView === 'kunden'
+                        ? `${[...new Set(active.map(p => p.kunde).filter(Boolean))].length} Kunden`
+                        : `${active.length} Projekt${active.length !== 1 ? 'e' : ''}`}
                     </span>
                     <div style={{ display: 'flex', gap: 2, background: COLORS.card, borderRadius: 8, padding: 3, border: `1.5px solid ${COLORS.border}` }}>
                       {[
-                        { key: 'list',   icon: '☰' },
-                        { key: 'kanban', icon: '⬛' },
-                      ].map(({ key, icon }) => (
-                        <button key={key} onClick={() => setListView(key)}
-                          title={key === 'list' ? 'Listenansicht' : 'Kanban-Ansicht'}
+                        { key: 'list',   icon: '☰',  title: 'Listenansicht' },
+                        { key: 'kanban', icon: '⬛', title: 'Kanban-Ansicht' },
+                        { key: 'kunden', icon: '👤', title: 'Kunden' },
+                      ].map(({ key, icon, title }) => (
+                        <button key={key} onClick={() => setListView(key)} title={title}
                           style={{
                             border: 'none', borderRadius: 6, cursor: 'pointer',
                             padding: '4px 10px', fontSize: 13,
@@ -194,8 +190,7 @@ export default function App() {
                           onArchive={() => archive(p.id)} />
                       ))}
                     </div>
-
-                    {active.length === 0 && !showAdd && (
+                    {active.length === 0 && (
                       <div style={{ textAlign: 'center', padding: '56px 20px', color: COLORS.textMuted }}>
                         <div style={{ fontSize: 44, marginBottom: 14, opacity: .3 }}>📦</div>
                         <p style={{ fontSize: 15, fontWeight: 600, marginBottom: 4 }}>Noch keine Projekte</p>
@@ -203,6 +198,11 @@ export default function App() {
                       </div>
                     )}
                   </>
+                )}
+
+                {/* Kunden */}
+                {listView === 'kunden' && (
+                  <KundenView projects={projects} onOpenProject={handleOpenProject} />
                 )}
               </>
             )}
