@@ -80,8 +80,9 @@ export default function App() {
     return a.name.localeCompare(b.name, 'de');
   });
 
-  const isKanban  = topNav === 'projekte' && view === 'list' && listView === 'kanban';
-  const isRechner = topNav === 'rechner';
+  const isListView = topNav === 'projekte' && view === 'list';
+  const isKanban   = isListView && listView === 'kanban';
+  const isRechner  = topNav === 'rechner';
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: COLORS.bg, minHeight: '100vh', paddingBottom: 60 }}>
@@ -123,7 +124,7 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ maxWidth: (isKanban || isRechner) ? 1100 : 680, margin: '0 auto', padding: '22px 18px' }}>
+      <div style={{ maxWidth: (isListView || isRechner) ? 1100 : 680, margin: '0 auto', padding: '22px 18px' }}>
 
         {/* RECHNER */}
         {topNav === 'rechner' && <NeonRechner />}
@@ -181,7 +182,7 @@ export default function App() {
 
                 {/* Liste */}
                 {listView === 'list' && (
-                  <>
+                  <div style={{ maxWidth: 680, margin: '0 auto' }}>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                       {sorted.map(p => (
                         <ProjectCard key={p.id} project={p}
@@ -197,12 +198,14 @@ export default function App() {
                         <p style={{ fontSize: 13 }}>Erstelle dein erstes Projekt.</p>
                       </div>
                     )}
-                  </>
+                  </div>
                 )}
 
                 {/* Kunden */}
                 {listView === 'kunden' && (
-                  <KundenView projects={projects} onOpenProject={handleOpenProject} />
+                  <div style={{ maxWidth: 680, margin: '0 auto' }}>
+                    <KundenView projects={projects} onOpenProject={handleOpenProject} />
+                  </div>
                 )}
               </>
             )}
