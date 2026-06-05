@@ -88,7 +88,7 @@ export default function App() {
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
 
       {/* Header */}
-      <div style={{ background: COLORS.accent, padding: '24px 24px 0', color: '#fff' }}>
+      <div style={{ background: '#1a2e22', padding: '24px 24px 0', color: '#fff' }}>
         <h1 style={{ margin: 0, fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 800, letterSpacing: -.5 }}>
           Projekt Planer
         </h1>

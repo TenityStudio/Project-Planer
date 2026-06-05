@@ -22,8 +22,8 @@ function MatAutoComplete({ value, onChange, catalog, onSelect }) {
       {open && matches.length > 0 && (
         <div style={{
           position: 'absolute', top: '100%', left: 0, right: 0, zIndex: 50,
-          background: '#fff', border: `1.5px solid ${COLORS.border}`, borderRadius: 8,
-          boxShadow: '0 8px 24px rgba(0,0,0,.12)', maxHeight: 200, overflow: 'auto', marginTop: 2,
+          background: COLORS.card, border: `1.5px solid ${COLORS.border}`, borderRadius: 8,
+          boxShadow: '0 8px 24px rgba(0,0,0,.4)', maxHeight: 200, overflow: 'auto', marginTop: 2,
         }}>
           {matches.map(c => (
             <div key={c.id}

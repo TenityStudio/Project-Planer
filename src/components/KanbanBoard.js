@@ -98,7 +98,7 @@ export function KanbanBoard({ projects, onOpen, onStatusChange, onArchive, onDup
             }}
             style={{
               flex: '0 0 220px',
-              background: isOver ? sc.bg : '#EDEAE5',
+              background: isOver ? sc.bg : COLORS.card,
               borderRadius: 12,
               padding: 12,
               border: `2px solid ${isOver ? sc.text : COLORS.border}`,

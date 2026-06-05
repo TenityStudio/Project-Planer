@@ -67,7 +67,7 @@ export function KundenView({ projects, onOpenProject }) {
                   onMouseLeave={e => e.currentTarget.style.background = COLORS.bg}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
                     {p.priority && <span style={{ fontSize: 12, flexShrink: 0 }}>🚩</span>}
-                    <span style={{ fontSize: 14, fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
+                    <span style={{ fontSize: 14, fontWeight: 600, color: COLORS.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</span>
                   </div>
                   <StatusBadge status={p.status} />
                 </div>
