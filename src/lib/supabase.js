@@ -199,6 +199,23 @@ function toDbProject(p) {
   };
 }
 
+// ─── Neon Preise ────────────────────────────────────────────
+
+export async function fetchNeonPreise() {
+  const { data, error } = await supabase.from('neon_preise').select('*');
+  if (error) throw error;
+  const result = {};
+  data.forEach(row => { result[row.key] = row.value; });
+  return result;
+}
+
+export async function upsertNeonPreis(key, value) {
+  const { error } = await supabase
+    .from('neon_preise')
+    .upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+  if (error) throw error;
+}
+
 // ─── Storage ────────────────────────────────────────────────
 
 export async function uploadBild(projectId, file) {

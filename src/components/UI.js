@@ -28,7 +28,7 @@ export function Inp({ value, onChange, placeholder, style, type = 'text', min, r
   const base = {
     fontFamily: "'DM Sans', sans-serif", fontSize: 14, padding: '9px 14px',
     border: `1.5px solid ${COLORS.border}`, borderRadius: 8, outline: 'none',
-    background: '#fff', color: COLORS.text, transition: 'border-color .15s',
+    background: COLORS.card, color: COLORS.text, transition: 'border-color .15s',
     width: '100%', boxSizing: 'border-box',
   };
   if (rows) return (
@@ -53,7 +53,7 @@ export function Sel({ value, onChange, options, style }) {
       style={{
         fontFamily: "'DM Sans', sans-serif", fontSize: 14, padding: '9px 14px',
         border: `1.5px solid ${COLORS.border}`, borderRadius: 8, outline: 'none',
-        background: '#fff', color: COLORS.text, cursor: 'pointer',
+        background: COLORS.card, color: COLORS.text, cursor: 'pointer',
         width: '100%', boxSizing: 'border-box', ...style,
       }}>
       {options.map(o => <option key={o} value={o}>{o}</option>)}
@@ -104,12 +104,12 @@ export function Card({ children, style }) {
 }
 
 export const FL = { fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: .8, color: COLORS.textMuted, marginBottom: 5 };
-export const DI = { fontFamily: "'DM Sans', sans-serif", fontSize: 14, padding: '9px 14px', border: `1.5px solid ${COLORS.border}`, borderRadius: 8, outline: 'none', background: '#fff', color: COLORS.text, width: '100%', boxSizing: 'border-box' };
+export const DI = { fontFamily: "'DM Sans', sans-serif", fontSize: 14, padding: '9px 14px', border: `1.5px solid ${COLORS.border}`, borderRadius: 8, outline: 'none', background: COLORS.card, color: COLORS.text, width: '100%', boxSizing: 'border-box' };
 
 export function ConfirmDialog({ message, onConfirm, onCancel }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.45)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24 }}>
-      <div style={{ background: '#fff', borderRadius: 16, padding: 28, maxWidth: 360, width: '100%', boxShadow: '0 8px 40px rgba(0,0,0,0.18)', fontFamily: "'DM Sans', sans-serif" }}>
+      <div style={{ background: COLORS.card, borderRadius: 16, padding: 28, maxWidth: 360, width: '100%', boxShadow: '0 8px 40px rgba(0,0,0,0.45)', fontFamily: "'DM Sans', sans-serif", border: `1.5px solid ${COLORS.border}` }}>
         <p style={{ margin: '0 0 22px', fontSize: 15, fontWeight: 600, color: COLORS.text }}>{message}</p>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
           <Btn onClick={onCancel} variant="ghost">Abbrechen</Btn>

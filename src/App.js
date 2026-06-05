@@ -9,6 +9,7 @@ import { ShoppingList } from './components/ShoppingList';
 import { ArchiveView } from './components/ArchiveView';
 import { KanbanBoard } from './components/KanbanBoard';
 import { KundenView } from './components/KundenView';
+import { NeonRechner } from './components/NeonRechner';
 
 export default function App() {
   const {
@@ -80,6 +81,7 @@ export default function App() {
   });
 
   const isKanban = topNav === 'projekte' && view === 'list' && listView === 'kanban';
+  const isRechner = topNav === 'rechner';
 
   return (
     <div style={{ fontFamily: "'DM Sans', sans-serif", background: COLORS.bg, minHeight: '100vh', paddingBottom: 60 }}>
@@ -100,6 +102,7 @@ export default function App() {
           {[
             { key: 'projekte', label: '📋 Projekte' },
             { key: 'kunden',   label: '👤 Kunden'   },
+            { key: 'rechner',  label: '⚡ Rechner'   },
           ].map(({ key, label }) => (
             <button
               key={key}
@@ -121,12 +124,15 @@ export default function App() {
         </div>
       </div>
 
-      <div style={{ maxWidth: isKanban ? 1100 : 680, margin: '0 auto', padding: '22px 18px' }}>
+      <div style={{ maxWidth: (isKanban || isRechner) ? 1100 : 680, margin: '0 auto', padding: '22px 18px' }}>
 
         {/* KUNDEN */}
         {topNav === 'kunden' && (
           <KundenView projects={projects} onOpenProject={handleOpenProject} />
         )}
+
+        {/* RECHNER */}
+        {topNav === 'rechner' && <NeonRechner />}
 
         {/* PROJEKTE */}
         {topNav === 'projekte' && (

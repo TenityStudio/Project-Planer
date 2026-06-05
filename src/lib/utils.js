@@ -2,18 +2,18 @@ export const UNITS = ['Stück','m','m²','m³','kg','g','Liter','ml','Packung','
 export const STATUSES = ['ToDo','Berechnen','Bau','Abgeschlossen'];
 
 export const STATUS_COLORS = {
-  'ToDo':        { bg: '#E8EDF3', text: '#4A6180' },
-  'Berechnen':   { bg: '#FFF3E0', text: '#B8760C' },
-  'Bau':         { bg: '#E8F0EB', text: '#2D5A3D' },
-  'Abgeschlossen':{ bg: '#E8E8E8', text: '#6B6B6B' },
+  'ToDo':          { bg: '#151D2E', text: '#6A9DC8' },
+  'Berechnen':     { bg: '#221A00', text: '#CCA020' },
+  'Bau':           { bg: '#0A1A10', text: '#4A9A60' },
+  'Abgeschlossen': { bg: '#1A1A28', text: '#8888AA' },
 };
 
 export const COLORS = {
-  bg: '#F5F0EB', card: '#FFFFFF', accent: '#2D5A3D', accentPale: '#E8F0EB',
-  danger: '#C44536', dangerPale: '#FCEAE8', text: '#1A1A1A', textMuted: '#6B6B6B',
-  border: '#E0DAD3', borderFocus: '#2D5A3D', tagBg: '#EDE7E0',
-  highlight: '#FFF8E7', highlightBorder: '#E8D5A3', prio: '#D4820E', prioBg: '#FFF3E0',
-  link: '#2563EB', archive: '#7C6F5E',
+  bg: '#0f1117', card: '#1a1a28', accent: '#2D5A3D', accentPale: '#0f1f16',
+  danger: '#E05548', dangerPale: '#2A1212', text: '#E8E8F0', textMuted: '#888899',
+  border: '#2a2a40', borderFocus: '#3D7A53', tagBg: '#1e1e30',
+  highlight: '#1A1800', highlightBorder: '#3A2E00', prio: '#E8A020', prioBg: '#1E1600',
+  link: '#5599EE', archive: '#8877AA',
 };
 
 export function formatDate(d) {

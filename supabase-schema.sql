@@ -78,6 +78,15 @@ alter table projects add column if not exists kunde text default '';
 -- Projektbild-URL (Migration für bestehende Datenbanken)
 alter table projects add column if not exists bild_url text default '';
 
+-- Neon-Rechner Preisliste (geteilt für alle Nutzer)
+create table if not exists neon_preise (
+  key text primary key,
+  value numeric not null default 0,
+  updated_at timestamptz default now()
+);
+
+alter table neon_preise disable row level security;
+
 -- Storage-Bucket für Projektbilder (einmalig ausführen)
 insert into storage.buckets (id, name, public)
 values ('projekt-bilder', 'projekt-bilder', true)
